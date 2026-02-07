@@ -36,8 +36,45 @@ import {
 import { calcDateRange } from "../common/datetime/calc_date_range";
 import type { DateRange } from "../common/datetime/calc_date_range";
 import { formatNumber } from "../common/number/format_number";
+import { DEFAULT_ENERGY_COLLECTION_KEY } from "../panels/energy/ha-panel-energy";
 
 const energyCollectionKeys: (string | undefined)[] = [];
+
+export const ENERGY_COLLECTION_KEY_PREFIX = "energy_";
+
+// Create an energy collection key.
+// This will add the required prefix if not already present.
+export function createEnergyCollectionKey(key: string): string {
+  if (!key.startsWith(ENERGY_COLLECTION_KEY_PREFIX)) {
+    key = ENERGY_COLLECTION_KEY_PREFIX + key;
+  }
+  return key;
+}
+
+// Validate that a string is a valid energy collection key
+// Will throw an error if invalid.
+export function validateEnergyCollectionKey(key: string | undefined) {
+  if (!key?.startsWith(ENERGY_COLLECTION_KEY_PREFIX)) {
+    throw new Error(
+      "Collection key must start with " + ENERGY_COLLECTION_KEY_PREFIX
+    );
+  }
+}
+
+// Return all currently active energy collections
+export function getActiveEnergyCollectionKeys(
+  hass: HomeAssistant
+): string[] | undefined {
+  if (!energyCollectionKeys?.length) return undefined;
+  const keys = energyCollectionKeys.filter((key) => {
+    if (key !== null && key !== undefined) {
+      const energyCollection = getEnergyDataCollection(hass, { key });
+      return !!energyCollection._active;
+    }
+    return false;
+  }) as string[];
+  return [...new Set([DEFAULT_ENERGY_COLLECTION_KEY, ...keys])];
+}
 
 export const emptyFlowFromGridSourceEnergyPreference =
   (): FlowFromGridSourceEnergyPreference => ({
@@ -752,9 +789,7 @@ export const getEnergyDataCollection = (
 ): EnergyCollection => {
   let key = "_energy";
   if (options.key) {
-    if (!options.key.startsWith("energy_")) {
-      throw new Error("Key need to start with energy_");
-    }
+    validateEnergyCollectionKey(options.key);
     key = `_${options.key}`;
   }
 
