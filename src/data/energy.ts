@@ -36,7 +36,6 @@ import {
 import { calcDateRange } from "../common/datetime/calc_date_range";
 import type { DateRange } from "../common/datetime/calc_date_range";
 import { formatNumber } from "../common/number/format_number";
-import { DEFAULT_ENERGY_COLLECTION_KEY } from "../panels/energy/ha-panel-energy";
 
 const energyCollectionKeys: (string | undefined)[] = [];
 
@@ -66,14 +65,13 @@ export function getActiveEnergyCollectionKeys(
   hass: HomeAssistant
 ): string[] | undefined {
   if (!energyCollectionKeys?.length) return undefined;
-  const keys = energyCollectionKeys.filter((key) => {
+  return energyCollectionKeys.filter((key) => {
     if (key !== null && key !== undefined) {
       const energyCollection = getEnergyDataCollection(hass, { key });
       return !!energyCollection._active;
     }
     return false;
   }) as string[];
-  return [...new Set([DEFAULT_ENERGY_COLLECTION_KEY, ...keys])];
 }
 
 export const emptyFlowFromGridSourceEnergyPreference =
