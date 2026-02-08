@@ -19,6 +19,7 @@ import "../../../../components/ha-form/ha-form";
 import type { HaFormSchema } from "../../../../components/ha-form/types";
 import type { HomeAssistant } from "../../../../types";
 import type {
+  EnergyCardBaseConfig,
   EnergyDevicesDetailGraphCardConfig,
   EnergyDevicesGraphCardConfig,
 } from "../../cards/types";
@@ -46,6 +47,10 @@ const cardConfigStruct = assign(
 
 const chartModeOpts = ["bar", "pie"] as const;
 
+type EnergyDevicesCardConfig =
+  | EnergyCardBaseConfig
+  | EnergyDevicesGraphCardConfig
+  | EnergyDevicesDetailGraphCardConfig;
 @customElement("hui-energy-devices-card-editor")
 export class HuiEnergyDevicesCardEditor
   extends LitElement
@@ -53,13 +58,9 @@ export class HuiEnergyDevicesCardEditor
 {
   @property({ attribute: false }) public hass?: HomeAssistant;
 
-  @state() private _config?:
-    | EnergyDevicesGraphCardConfig
-    | EnergyDevicesDetailGraphCardConfig;
+  @state() private _config?: EnergyDevicesCardConfig;
 
-  public setConfig(
-    config: EnergyDevicesGraphCardConfig | EnergyDevicesDetailGraphCardConfig
-  ): void {
+  public setConfig(config: EnergyDevicesCardConfig): void {
     assert(config, cardConfigStruct);
     this._config = config;
   }
@@ -67,7 +68,7 @@ export class HuiEnergyDevicesCardEditor
   private _schema = memoizeOne(
     (
       localize: LocalizeFunc,
-      detailCard: boolean,
+      type: string,
       collectionKeys: string[] | undefined
     ) => {
       const schema: HaFormSchema[] = [
@@ -97,7 +98,7 @@ export class HuiEnergyDevicesCardEditor
               required: false,
               selector: { number: { min: 1, mode: "box" } },
             },
-            ...(!detailCard
+            ...(type === "energy-devices-graph"
               ? ([
                   {
                     name: "modes",
@@ -106,10 +107,10 @@ export class HuiEnergyDevicesCardEditor
                       select: {
                         multiple: true,
                         mode: "list",
-                        options: chartModeOpts.map((type) => ({
-                          value: type,
+                        options: chartModeOpts.map((mode) => ({
+                          value: mode,
                           label: localize(
-                            `ui.panel.lovelace.editor.card.energy-devices-graph.mode_options.${type}`
+                            `ui.panel.lovelace.editor.card.energy-devices-graph.mode_options.${mode}`
                           ),
                         })),
                       },
@@ -136,7 +137,7 @@ export class HuiEnergyDevicesCardEditor
 
     const schema = this._schema(
       this.hass.localize,
-      this._config.type === "energy-devices-detail-graph",
+      this._config.type,
       getActiveEnergyCollectionKeys(this.hass)
     );
 
