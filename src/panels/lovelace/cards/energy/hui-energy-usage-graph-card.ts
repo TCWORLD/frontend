@@ -40,6 +40,7 @@ import {
   getCompareTransform,
 } from "./common/energy-chart-options";
 import type { ECOption } from "../../../../resources/echarts/echarts";
+import type { CustomLegendOption } from "../../../../components/chart/ha-chart-base";
 
 const colorPropertyMap = {
   to_grid: "--energy-grid-return-color",
@@ -65,6 +66,8 @@ export class HuiEnergyUsageGraphCard
   @state() private _config?: EnergyUsageGraphCardConfig;
 
   @state() private _chartData: BarSeriesOption[] = [];
+
+  @state() private _legendData?: CustomLegendOption["data"];
 
   @state() private _start = startOfToday();
 
@@ -141,7 +144,8 @@ export class HuiEnergyUsageGraphCard
               this.hass.locale,
               this.hass.config,
               this._compareStart,
-              this._compareEnd
+              this._compareEnd,
+              this._legendData
             )}
             chart-type="bar"
           ></ha-chart-base>
@@ -177,7 +181,8 @@ export class HuiEnergyUsageGraphCard
       locale: FrontendLocaleData,
       config: HassConfig,
       compareStart?: Date,
-      compareEnd?: Date
+      compareEnd?: Date,
+      legendData?: CustomLegendOption["data"]
     ): ECOption => {
       const commonOptions = getCommonOptions(
         start,
@@ -216,6 +221,11 @@ export class HuiEnergyUsageGraphCard
             )?.(params);
           },
         },
+        legend: {
+          show: this._config?.show_legend !== false,
+          type: "custom",
+          data: legendData,
+        },
       };
       return options;
     }
@@ -223,6 +233,7 @@ export class HuiEnergyUsageGraphCard
 
   private async _getStatistics(energyData: EnergyData): Promise<void> {
     const datasets: BarSeriesOption[] = [];
+    this._legendData = [];
 
     const statIds: {
       to_grid?: string[];

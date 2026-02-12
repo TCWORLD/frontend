@@ -66,7 +66,7 @@ export class HuiEnergyGraphCardEditor
             },
           },
         },
-        ...(type === "power-sources-graph"
+        ...(type === "energy-usage-graph" || type === "power-sources-graph"
           ? [
               {
                 name: "show_legend",
@@ -136,7 +136,7 @@ export class HuiEnergyGraphCardEditor
         );
       case "show_legend":
         return this.hass!.localize(
-          `ui.panel.lovelace.editor.card.power-sources-graph.${schema.name}`
+          `ui.panel.lovelace.editor.card.energy-usage-graph.${schema.name}`
         );
       default:
         return this.hass!.localize(

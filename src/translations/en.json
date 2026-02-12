@@ -8716,7 +8716,8 @@
             },
             "energy-usage-graph": {
               "name": "Energy usage graph",
-              "description": "The energy usage graph card shows the amount of energy your house has consumed, and from what source this energy came."
+              "description": "The energy usage graph card shows the amount of energy your house has consumed, and from what source this energy came.",
+              "show_legend": "Show legend"
             },
             "energy-solar-graph": {
               "name": "Solar production graph",
@@ -8732,8 +8733,7 @@
             },
             "power-sources-graph": {
               "name": "Power sources graph",
-              "description": "The power sources graph shows historical power data.",
-              "show_legend": "Show legend"
+              "description": "The power sources graph shows historical power data."
             },
             "energy-devices-graph": {
               "name": "Devices energy graph",
