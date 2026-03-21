@@ -190,6 +190,19 @@ export const fetchStatistics = (
     types,
   });
 
+export const fetchStatisticsUnitConversion = (
+  hass: HomeAssistant,
+  statistic_ids?: string[],
+  from_state?: boolean,
+  units?: StatisticsUnitConfiguration
+) =>
+  hass.callWS<Statistics>({
+    type: "recorder/statistics_unit_conversion",
+    statistic_ids,
+    from_state,
+    units,
+  });
+
 export const fetchStatistic = (
   hass: HomeAssistant,
   statistic_id: string,
