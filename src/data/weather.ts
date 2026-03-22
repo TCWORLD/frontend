@@ -32,6 +32,13 @@ import { supportsFeature } from "../common/entity/supports-feature";
 import { round } from "../common/number/round";
 import "../components/ha-svg-icon";
 import type { HomeAssistant } from "../types";
+import {
+  PERCENTAGE,
+  UnitOfLength,
+  UnitOfPrecipitationDepth,
+  UnitOfPressure,
+  UnitOfTime,
+} from "../common/unit-conversion/const";
 
 export const enum WeatherEntityFeature {
   FORECAST_DAILY = 1,
@@ -234,12 +241,16 @@ export const getWeatherUnit = (
     case "precipitation":
       return (
         stateObj.attributes.precipitation_unit ||
-        (lengthUnit === "km" ? "mm" : "in")
+        (lengthUnit === UnitOfLength.KILOMETERS
+          ? UnitOfPrecipitationDepth.MILLIMETERS
+          : UnitOfPrecipitationDepth.INCHES)
       );
     case "pressure":
       return (
         stateObj.attributes.pressure_unit ||
-        (lengthUnit === "km" ? "hPa" : "inHg")
+        (lengthUnit === UnitOfLength.KILOMETERS
+          ? UnitOfPressure.HPA
+          : UnitOfPressure.INHG)
       );
     case "apparent_temperature":
     case "dew_point":
@@ -249,11 +260,14 @@ export const getWeatherUnit = (
         stateObj.attributes.temperature_unit || config.unit_system.temperature
       );
     case "wind_speed":
-      return stateObj.attributes.wind_speed_unit || `${lengthUnit}/h`;
+      return (
+        stateObj.attributes.wind_speed_unit ||
+        `${lengthUnit}/${UnitOfTime.HOURS}`
+      );
     case "cloud_coverage":
     case "humidity":
     case "precipitation_probability":
-      return "%";
+      return PERCENTAGE;
     default:
       return config.unit_system[measure] || "";
   }
