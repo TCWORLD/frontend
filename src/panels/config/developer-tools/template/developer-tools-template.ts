@@ -15,11 +15,12 @@ import { showConfirmationDialog } from "../../../../dialogs/generic/show-dialog-
 import { haStyle } from "../../../../resources/styles";
 import type { HomeAssistant } from "../../../../types";
 import { documentationUrl } from "../../../../util/documentation-url";
+import { UnitOfTemperature } from "../../../../common/unit-conversion/const";
 
 const DEMO_TEMPLATE = `{## Imitate available variables: ##}
 {% set my_test_json = {
   "temperature": 25,
-  "unit": "°C"
+  "unit": "${UnitOfTemperature.CELSIUS}"
 } %}
 
 The temperature is {{ my_test_json.temperature }} {{ my_test_json.unit }}.

@@ -36,6 +36,7 @@ import {
 import type { LovelaceCard, LovelaceGridOptions } from "../types";
 import { tileCardStyle } from "./tile/tile-card-style";
 import type { HomeSummaryCard } from "./types";
+import { UnitOfEnergy } from "../../../common/unit-conversion/const";
 
 const COLORS: Record<HomeSummary, string> = {
   light: "amber",
@@ -255,7 +256,11 @@ export class HuiHomeSummaryCard
         const { summedData } = getSummedData(this._energyData);
         const { consumption } = computeConsumptionData(summedData, undefined);
         const totalConsumption = consumption.total.used_total;
-        return formatConsumptionShort(this.hass, totalConsumption, "kWh");
+        return formatConsumptionShort(
+          this.hass,
+          totalConsumption,
+          UnitOfEnergy.KILO_WATT_HOUR
+        );
       }
     }
     return "";

@@ -2,7 +2,7 @@ import type { PropertyValues } from "lit";
 import { html, LitElement, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators";
 import { styleMap } from "lit/directives/style-map";
-import { UNIT_F } from "../../../common/const";
+import { UnitOfTemperature } from "../../../common/unit-conversion/const";
 import { computeDomain } from "../../../common/entity/compute_domain";
 import { computeStateDomain } from "../../../common/entity/compute_state_domain";
 import { stateColorCss } from "../../../common/entity/state_color";
@@ -109,7 +109,10 @@ class HuiTargetTemperatureCardFeature
   private get _step() {
     return (
       this._stateObj!.attributes.target_temp_step ||
-      (this.hass!.config.unit_system.temperature === UNIT_F ? 1 : 0.5)
+      (this.hass!.config.unit_system.temperature ===
+      UnitOfTemperature.FAHRENHEIT
+        ? 1
+        : 0.5)
     );
   }
 

@@ -110,10 +110,6 @@ export const DOMAINS_WITH_DYNAMIC_PICTURE = new Set([
   "media_player",
 ]);
 
-/** Temperature units. */
-export const UNIT_C = "°C";
-export const UNIT_F = "°F";
-
 /** Entity ID of the default view. */
 export const DEFAULT_VIEW_ENTITY_ID = "group.default_view";
 

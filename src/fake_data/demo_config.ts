@@ -1,5 +1,14 @@
 import type { HassConfig } from "home-assistant-js-websocket";
 import { STATE_RUNNING } from "home-assistant-js-websocket";
+import {
+  UnitOfLength,
+  UnitOfMass,
+  UnitOfPrecipitationDepth,
+  UnitOfPressure,
+  UnitOfSpeed,
+  UnitOfTemperature,
+  UnitOfVolume,
+} from "../common/unit-conversion/const";
 
 export const demoConfig: HassConfig = {
   location_name: "Home",
@@ -8,13 +17,13 @@ export const demoConfig: HassConfig = {
   longitude: 4.8903147,
   radius: 100,
   unit_system: {
-    length: "km",
-    mass: "kg",
-    temperature: "°C",
-    volume: "L",
-    pressure: "Pa",
-    wind_speed: "m/s",
-    accumulated_precipitation: "mm",
+    length: UnitOfLength.KILOMETERS,
+    mass: UnitOfMass.KILOGRAMS,
+    temperature: UnitOfTemperature.CELSIUS,
+    volume: UnitOfVolume.LITERS,
+    pressure: UnitOfPressure.PA,
+    wind_speed: UnitOfSpeed.METERS_PER_SECOND,
+    accumulated_precipitation: UnitOfPrecipitationDepth.MILLIMETERS,
   },
   components: [
     "notify.html5",

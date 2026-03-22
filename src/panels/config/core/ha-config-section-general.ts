@@ -1,7 +1,6 @@
 import type { TemplateResult } from "lit";
 import { css, html, LitElement, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators";
-import { UNIT_C } from "../../../common/const";
 import { stopPropagation } from "../../../common/dom/stop_propagation";
 import { navigate } from "../../../common/navigate";
 import "../../../components/buttons/ha-progress-button";
@@ -27,6 +26,7 @@ import "../../../layouts/hass-subpage";
 import "../../../components/map/ha-map";
 import { haStyle } from "../../../resources/styles";
 import type { HomeAssistant, ValueChangedEvent } from "../../../types";
+import { UnitOfTemperature } from "../../../common/unit-conversion/const";
 
 @customElement("ha-config-section-general")
 class HaConfigSectionGeneral extends LitElement {
@@ -337,7 +337,8 @@ class HaConfigSectionGeneral extends LitElement {
   }
 
   private _configuredUnitSystem() {
-    return this.hass.config.unit_system.temperature === UNIT_C
+    return this.hass.config.unit_system.temperature ===
+      UnitOfTemperature.CELSIUS
       ? "metric"
       : "us_customary";
   }

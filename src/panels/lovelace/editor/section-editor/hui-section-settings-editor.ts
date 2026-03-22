@@ -15,6 +15,7 @@ import {
 import type { LovelaceViewConfig } from "../../../../data/lovelace/config/view";
 import type { LocalizeFunc } from "../../../../common/translations/localize";
 import type { HomeAssistant } from "../../../../types";
+import { PERCENTAGE } from "../../../../common/unit-conversion/const";
 
 interface SettingsData {
   column_span?: number;
@@ -81,7 +82,7 @@ export class HuiDialogEditSection extends LitElement {
                         min: 0,
                         max: 100,
                         step: 1,
-                        unit_of_measurement: "%",
+                        unit_of_measurement: PERCENTAGE,
                         mode: "slider",
                       },
                     },

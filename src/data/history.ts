@@ -11,6 +11,7 @@ import type { LocalizeFunc } from "../common/translations/localize";
 import type { HomeAssistant } from "../types";
 import type { FrontendLocaleData } from "./translation";
 import type { Statistics } from "./recorder";
+import { PERCENTAGE } from "../common/unit-conversion/const";
 
 const DOMAINS_USE_LAST_UPDATED = ["climate", "humidifier", "water_heater"];
 const NEED_ATTRIBUTE_DOMAINS = [
@@ -533,7 +534,7 @@ export const computeHistory = (
       unit = {
         zone: localize("ui.dialogs.more_info_control.zone.graph_unit"),
         climate: hass.config.unit_system.temperature,
-        humidifier: "%",
+        humidifier: PERCENTAGE,
         water_heater: hass.config.unit_system.temperature,
       }[domain];
     }
