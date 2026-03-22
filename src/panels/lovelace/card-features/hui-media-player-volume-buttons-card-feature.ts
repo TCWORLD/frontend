@@ -16,6 +16,7 @@ import type {
   LovelaceCardFeatureContext,
   MediaPlayerVolumeButtonsCardFeatureConfig,
 } from "./types";
+import { DOMAIN_ATTRIBUTES_UNITS } from "../../../data/entity/entity_attributes";
 
 export const supportsMediaPlayerVolumeButtonsCardFeature = (
   hass: HomeAssistant,
@@ -97,7 +98,7 @@ class HuiMediaPlayerVolumeButtonsCardFeature
         max="100"
         .step=${this._config.step ?? 5}
         .value=${position}
-        unit="%"
+        unit=${DOMAIN_ATTRIBUTES_UNITS.media_player.volume_level}
         @value-changed=${this._valueChanged}
       ></ha-control-number-buttons>
     `;

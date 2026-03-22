@@ -12,6 +12,7 @@ import type {
   LovelaceCardFeatureContext,
   TargetHumidityCardFeatureConfig,
 } from "./types";
+import { DOMAIN_ATTRIBUTES_UNITS } from "../../../data/entity/entity_attributes";
 
 export const supportsTargetHumidityCardFeature = (
   hass: HomeAssistant,
@@ -121,7 +122,7 @@ class HuiTargetHumidityCardFeature
           this._stateObj,
           "humidity"
         )}
-        unit="%"
+        unit=${DOMAIN_ATTRIBUTES_UNITS.humidifier.humidity}
         .locale=${this.hass.locale}
       ></ha-control-slider>
     `;

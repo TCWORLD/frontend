@@ -9,6 +9,7 @@ import "../../components/ha-control-slider";
 import { UNAVAILABLE } from "../../data/entity/entity";
 import type { LightEntity } from "../../data/light";
 import type { HomeAssistant } from "../../types";
+import { DOMAIN_ATTRIBUTES_UNITS } from "../../data/entity/entity_attributes";
 
 @customElement("ha-state-control-light-brightness")
 export class HaStateControlLightBrightness extends LitElement {
@@ -76,7 +77,7 @@ export class HaStateControlLightBrightness extends LitElement {
           "--control-slider-background": color,
         })}
         .disabled=${this.stateObj.state === UNAVAILABLE}
-        unit="%"
+        unit=${DOMAIN_ATTRIBUTES_UNITS.light.brightness}
         .locale=${this.hass.locale}
       >
       </ha-control-slider>

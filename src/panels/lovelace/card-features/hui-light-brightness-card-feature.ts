@@ -12,6 +12,7 @@ import type {
   LightBrightnessCardFeatureConfig,
   LovelaceCardFeatureContext,
 } from "./types";
+import { DOMAIN_ATTRIBUTES_UNITS } from "../../../data/entity/entity_attributes";
 
 export const supportsLightBrightnessCardFeature = (
   hass: HomeAssistant,
@@ -84,7 +85,7 @@ class HuiLightBrightnessCardFeature
         .disabled=${this._stateObj!.state === UNAVAILABLE}
         @value-changed=${this._valueChanged}
         .label=${this.hass.localize("ui.card.light.brightness")}
-        unit="%"
+        unit=${DOMAIN_ATTRIBUTES_UNITS.light.brightness}
         .locale=${this.hass.locale}
       ></ha-control-slider>
     `;

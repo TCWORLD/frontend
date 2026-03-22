@@ -16,6 +16,7 @@ import type {
   LovelaceCardFeatureContext,
   MediaPlayerVolumeSliderCardFeatureConfig,
 } from "./types";
+import { DOMAIN_ATTRIBUTES_UNITS } from "../../../data/entity/entity_attributes";
 
 export const supportsMediaPlayerVolumeSliderCardFeature = (
   hass: HomeAssistant,
@@ -89,7 +90,7 @@ class HuiMediaPlayerVolumeSliderCardFeature
         .showHandle=${stateActive(this._stateObj)}
         .disabled=${!this._stateObj || isUnavailableState(this._stateObj.state)}
         @value-changed=${this._valueChanged}
-        unit="%"
+        unit=${DOMAIN_ATTRIBUTES_UNITS.media_player.volume_level}
         .locale=${this.hass.locale}
       ></ha-control-slider>
     `;

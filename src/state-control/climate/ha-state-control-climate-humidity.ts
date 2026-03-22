@@ -21,6 +21,7 @@ import {
   createStateControlCircularSliderController,
   stateControlCircularSliderStyle,
 } from "../state-control-circular-slider-style";
+import { DOMAIN_ATTRIBUTES_UNITS } from "../../data/entity/entity_attributes";
 
 @customElement("ha-state-control-climate-humidity")
 export class HaStateControlClimateHumidity extends LitElement {
@@ -139,7 +140,7 @@ export class HaStateControlClimateHumidity extends LitElement {
     return html`
       <ha-big-number
         .value=${humidity}
-        unit="%"
+        unit=${DOMAIN_ATTRIBUTES_UNITS.humidifier.humidity}
         unit-position="bottom"
         .hass=${this.hass}
         .formatOptions=${formatOptions}

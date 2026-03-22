@@ -10,6 +10,7 @@ import type {
   MediaPlayerVolumeButtonsCardFeatureConfig,
 } from "../../card-features/types";
 import type { LovelaceCardFeatureEditor } from "../../types";
+import { DOMAIN_ATTRIBUTES_UNITS } from "../../../../data/entity/entity_attributes";
 
 @customElement("hui-media-player-volume-buttons-card-feature-editor")
 export class HuiMediaPlayerVolumeButtonsCardFeatureEditor
@@ -37,7 +38,8 @@ export class HuiMediaPlayerVolumeButtonsCardFeatureEditor
               step: 1,
               min: 1,
               max: 100,
-              unit_of_measurement: "%",
+              unit_of_measurement:
+                DOMAIN_ATTRIBUTES_UNITS.media_player.volume_level,
             },
           },
         },
