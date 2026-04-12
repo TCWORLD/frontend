@@ -3957,7 +3957,8 @@
           "tabs": {
             "electricity": "Electricity",
             "gas": "Gas",
-            "water": "Water"
+            "water": "Water",
+            "heating": "Heating"
           },
           "delete_source": "Are you sure you want to remove this source?",
           "delete_integration": "Are you sure you want to remove this integration? It will remove the entities it provides",
@@ -4099,6 +4100,32 @@
               "gas_usage": "Gas consumption",
               "gas_flow_rate": "Gas flow rate",
               "flow_rate_para": "Optionally pick a sensor which measures the gas flow rate in either of {unit}."
+            }
+          },
+          "heating": {
+            "title": "Heating energy",
+            "sub": "Let Home Assistant monitor your heating usage.",
+            "learn_more": "More information on how to get started",
+            "heating_energy": "Heating energy",
+            "edit_heating_source": "Edit heating source",
+            "delete_heating_source": "Remove heating source",
+            "add_heating_source": "Add heating source",
+            "dialog": {
+              "header": "Configure heating energy",
+              "paragraph": "Heating energy is the energy provided by your heating system.",
+              "energy_from_heater": "Energy provided by heater",
+              "energy_from_helper": "Pick a sensor which measures the energy output of your heating system either of {unit}.",
+              "energy_to_heater": "Energy consumed by heater",
+              "energy_to_helper": "Pick a sensor which measures the energy consumption of your heating system in either of {unit}.",
+              "cost_para": "Select how Home Assistant should keep track of the costs of heating in your home.",
+              "no_cost": "[%key:ui::panel::config::energy::grid::flow_dialog::from::no_cost%]",
+              "cost_stat": "[%key:ui::panel::config::energy::grid::flow_dialog::from::cost_stat%]",
+              "cost_stat_label": "[%key:ui::panel::config::energy::grid::flow_dialog::from::cost_stat_input%]",
+              "cost_entity": "[%key:ui::panel::config::energy::grid::flow_dialog::from::cost_entity%]",
+              "cost_entity_label": "[%key:ui::panel::config::energy::grid::flow_dialog::from::cost_entity_input%]",
+              "cost_entity_helper": "Any entity with a unit of `{currency}/(valid energy unit)` (e.g. `{currency}/kWh`) may be used and will be automatically converted.",
+              "cost_number": "[%key:ui::panel::config::energy::grid::flow_dialog::from::cost_number%]",
+              "cost_number_label": "[%key:ui::panel::config::energy::grid::flow_dialog::from::cost_number%]"
             }
           },
           "water": {
@@ -8401,6 +8428,7 @@
             "energy_sources_table": {
               "grid_total": "Grid total",
               "gas_total": "Gas total",
+              "heating_total": "Heating total",
               "solar_total": "Solar total",
               "water_total": "Water total",
               "source": "Source",
@@ -8418,6 +8446,11 @@
             },
             "energy_gas_graph": {
               "total_consumed": "Total consumed {num} {unit}"
+            },
+            "energy_heating_graph": {
+              "overall_cop": "Coefficient of Performance {num}",
+              "total_delivered": "Total delivered {num} kWh",
+              "total_consumed": "[%key:ui::panel::lovelace::cards::energy::energy_gas_graph::total_consumed%]"
             },
             "energy_water_graph": {
               "total_consumed": "[%key:ui::panel::lovelace::cards::energy::energy_gas_graph::total_consumed%]"
@@ -9149,6 +9182,10 @@
               "name": "Gas consumption graph",
               "description": "This card shows the amount of gas consumed per source."
             },
+            "energy-heating-graph": {
+              "name": "Heating energy graph",
+              "description": "This card shows the amount of energy consumed and delivered per heating source."
+            },
             "energy-water-graph": {
               "name": "Water consumption graph",
               "description": "This card shows the amount of water consumed per source."
@@ -9179,6 +9216,7 @@
                 "solar": "Solar",
                 "battery": "Battery",
                 "gas": "Gas",
+                "heating": "Heating",
                 "water": "Water"
               }
             },
@@ -10736,6 +10774,7 @@
           "overview": "Summary",
           "electricity": "Electricity",
           "gas": "Gas",
+          "heating": "Heating",
           "water": "Water",
           "now": "Now"
         },
@@ -10757,6 +10796,7 @@
           "energy_usage_graph_title": "Electricity usage",
           "energy_solar_graph_title": "Solar production",
           "energy_gas_graph_title": "Gas consumption",
+          "energy_heating_graph_title": "Heating energy",
           "energy_water_graph_title": "Water consumption",
           "energy_distribution_title": "Energy distribution",
           "energy_sources_table_title": "Sources",

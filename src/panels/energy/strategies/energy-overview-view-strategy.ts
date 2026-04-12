@@ -54,6 +54,9 @@ export class EnergyOverviewViewStrategy extends ReactiveElement {
         (!!source.stat_energy_from || !!source.stat_energy_to)
     );
     const hasGas = prefs.energy_sources.some((source) => source.type === "gas");
+    const hasHeating = prefs.energy_sources.some(
+      (source) => source.type === "heating"
+    );
     const hasBattery = prefs.energy_sources.some(
       (source) => source.type === "battery"
     );
@@ -144,6 +147,21 @@ export class EnergyOverviewViewStrategy extends ReactiveElement {
               "ui.panel.energy.cards.energy_gas_graph_title"
             ),
             type: "energy-gas-graph",
+            collection_key: collectionKey,
+          },
+        ],
+      });
+    }
+
+    if (hasHeating) {
+      view.sections!.push({
+        type: "grid",
+        cards: [
+          {
+            title: hass.localize(
+              "ui.panel.energy.cards.energy_heating_graph_title"
+            ),
+            type: "energy-heating-graph",
             collection_key: collectionKey,
           },
         ],

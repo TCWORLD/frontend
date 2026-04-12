@@ -90,6 +90,16 @@ export const emptyGasEnergyPreference = (): GasSourceTypeEnergyPreference => ({
   number_energy_price: null,
 });
 
+export const emptyHeatingEnergyPreference =
+  (): HeatingSourceTypeEnergyPreference => ({
+    type: "heating",
+    stat_energy_from: "",
+    stat_energy_to: "",
+    stat_cost: null,
+    entity_energy_price: null,
+    number_energy_price: null,
+  });
+
 export const emptyWaterEnergyPreference =
   (): WaterSourceTypeEnergyPreference => ({
     type: "water",
@@ -117,6 +127,20 @@ export interface PowerConfig {
   stat_rate_inverted?: string; // Inverted single sensor
   stat_rate_from?: string; // Battery: discharge / Grid: consumption
   stat_rate_to?: string; // Battery: charge / Grid: return
+}
+
+export interface HeatingConfig {
+  // Power delivered as heat. Can be omitted and calculated from metering sensors.
+  stat_rate?: string;
+
+  // Heating system energy metering
+  stat_rate_fluid: string; // Instantaneous fluid flow rate: L/min, gal/min, m³/h, etc.
+  stat_temp_from: string; // Fluid supply temperature
+  stat_temp_to: string; // Fluid return temperature
+
+  // Heat capacity of fluid (J/kg/K). By default assumes water, 4184 J/kg/K.
+  // Used when calculating power delivered if sensor not provided.
+  number_heat_capacity?: number;
 }
 
 /**
@@ -165,6 +189,7 @@ export interface BatterySourceTypeEnergyPreference {
   stat_rate?: string; // always available if power_config is set
   power_config?: PowerConfig;
 }
+
 export interface GasSourceTypeEnergyPreference {
   type: "gas";
 
@@ -201,12 +226,37 @@ export interface WaterSourceTypeEnergyPreference {
   unit_of_measurement?: string | null;
 }
 
+export interface HeatingSourceTypeEnergyPreference {
+  type: "heating";
+
+  // Energy delivered from the heating system
+  stat_energy_from: string;
+
+  // Optionally energy consumed by the heating system
+  stat_energy_to: string | null;
+
+  // $ meter for stat_energy_to
+  stat_cost: string | null;
+
+  // Can be used to generate costs if stat_cost omitted
+  entity_energy_price: string | null;
+  number_energy_price: number | null;
+
+  // Optional power consumed by heating system
+  stat_rate_to?: string;
+
+  // Heating power delivered
+  stat_rate?: string; // always available if heating_config is set
+  heating_config?: HeatingConfig;
+}
+
 export type EnergySource =
   | SolarSourceTypeEnergyPreference
   | GridSourceTypeEnergyPreference
   | BatterySourceTypeEnergyPreference
   | GasSourceTypeEnergyPreference
-  | WaterSourceTypeEnergyPreference;
+  | WaterSourceTypeEnergyPreference
+  | HeatingSourceTypeEnergyPreference;
 
 export interface EnergyPreferences {
   energy_sources: EnergySource[];
@@ -284,6 +334,7 @@ export interface EnergySourceByType {
   solar?: SolarSourceTypeEnergyPreference[];
   battery?: BatterySourceTypeEnergyPreference[];
   gas?: GasSourceTypeEnergyPreference[];
+  heating?: HeatingSourceTypeEnergyPreference[];
   water?: WaterSourceTypeEnergyPreference[];
 }
 
@@ -344,6 +395,21 @@ export const getReferencedStatisticIds = (
       continue;
     }
 
+    if (source.type === "heating") {
+      statIDs.push(source.stat_energy_from);
+      if (source.stat_energy_to) {
+        statIDs.push(source.stat_energy_to);
+        if (source.stat_cost) {
+          statIDs.push(source.stat_cost);
+        }
+        const costStatId = info.cost_sensors[source.stat_energy_to];
+        if (costStatId) {
+          statIDs.push(costStatId);
+        }
+      }
+      continue;
+    }
+
     // grid source
     if (source.stat_energy_from) {
       statIDs.push(source.stat_energy_from);
@@ -397,14 +463,17 @@ export const getReferencedStatisticIdsPower = (
       continue;
     }
 
-    if (source.type === "battery") {
+    if (source.type === "heating") {
       if (source.stat_rate) {
         statIDs.push(source.stat_rate);
+      }
+      if (source.stat_rate_to) {
+        statIDs.push(source.stat_rate_to);
       }
       continue;
     }
 
-    // grid source
+    // grid/battery source
     if (source.stat_rate) {
       statIDs.push(source.stat_rate);
     }
@@ -457,6 +526,7 @@ const getEnergyData = async (
     "solar",
     "battery",
     "gas",
+    "heating",
     "device",
   ]);
   const powerStatIds = getReferencedStatisticIdsPower(prefs);
@@ -1823,6 +1893,35 @@ export const downloadEnergyData = (
     "gas_consumption_cost",
     gas_consumptions_cost
   );
+
+  const heating_consumptions: string[] = [];
+  const heating_consumptions_cost: string[] = [];
+  const heating_deliveries: string[] = [];
+  energy_sources
+    .filter((s) => s.type === "heating")
+    .forEach((source) => {
+      source = source as HeatingSourceTypeEnergyPreference;
+      const statId = source.stat_energy_to;
+      if (statId) {
+        heating_consumptions.push(statId);
+        const costId =
+          source.stat_cost || energyData.state.info.cost_sensors[statId];
+        if (costId) {
+          heating_consumptions_cost.push(costId);
+        }
+      }
+      const deliveredId = source.stat_energy_from;
+      heating_deliveries.push(deliveredId);
+    });
+
+  printCategory(
+    "heating_consumption",
+    heating_consumptions,
+    electricUnit,
+    "heating_consumption_cost",
+    heating_consumptions_cost
+  );
+  printCategory("heating_delivered", heating_deliveries, electricUnit);
 
   const water_consumptions: string[] = [];
   const water_consumptions_cost: string[] = [];

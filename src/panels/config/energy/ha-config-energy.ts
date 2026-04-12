@@ -1,5 +1,11 @@
 import "../../../layouts/hass-error-screen";
-import { mdiDownload, mdiFire, mdiLightningBolt, mdiWater } from "@mdi/js";
+import {
+  mdiDownload,
+  mdiFire,
+  mdiLightningBolt,
+  mdiWater,
+  mdiWaterBoiler,
+} from "@mdi/js";
 import type { CSSResultGroup, PropertyValues, TemplateResult } from "lit";
 import { css, html, LitElement, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators";
@@ -28,6 +34,7 @@ import "./components/ha-energy-device-settings-water";
 import "./components/ha-energy-grid-settings";
 import "./components/ha-energy-solar-settings";
 import "./components/ha-energy-battery-settings";
+import "./components/ha-energy-heating-settings";
 import "./components/ha-energy-gas-settings";
 import "./components/ha-energy-water-settings";
 import { fileDownload } from "../../../util/file_download";
@@ -56,6 +63,12 @@ const TABS: PageNavigation[] = [
     path: "/config/energy/water",
     translationKey: "ui.panel.config.energy.tabs.water",
     iconPath: mdiWater,
+    iconColor: "#F1C447",
+  },
+  {
+    path: "/config/energy/heating",
+    translationKey: "ui.panel.config.energy.tabs.heating",
+    iconPath: mdiWaterBoiler,
     iconColor: "#F1C447",
   },
 ];
@@ -204,6 +217,16 @@ class HaConfigEnergy extends LitElement {
             @value-changed=${this._prefsChanged}
           ></ha-energy-device-settings-water>
         `;
+      case "heating":
+        return html`
+          <ha-energy-heating-settings
+            .hass=${this.hass}
+            .preferences=${this._preferences!}
+            .statsMetadata=${this._statsMetadata}
+            .validationResult=${this._validationResult}
+            @value-changed=${this._prefsChanged}
+          ></ha-energy-heating-settings>
+        `;
       default:
         return nothing;
     }
@@ -304,6 +327,7 @@ class HaConfigEnergy extends LitElement {
         ha-energy-solar-settings,
         ha-energy-battery-settings,
         ha-energy-gas-settings,
+        ha-energy-heating-settings,
         ha-energy-water-settings,
         ha-energy-device-settings,
         ha-energy-device-settings-water {

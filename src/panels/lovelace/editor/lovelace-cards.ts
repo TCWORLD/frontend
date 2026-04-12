@@ -161,6 +161,10 @@ export const energyCards: Card[] = [
     showElement: false,
   },
   {
+    type: "energy-heating-graph",
+    showElement: false,
+  },
+  {
     type: "energy-water-graph",
     showElement: false,
   },

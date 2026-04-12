@@ -6,6 +6,7 @@ import type {
   EnergyInfo,
   GasSourceTypeEnergyPreference,
   GridSourceTypeEnergyPreference,
+  HeatingSourceTypeEnergyPreference,
   SolarSourceTypeEnergyPreference,
   WaterSourceTypeEnergyPreference,
 } from "../../../../data/energy";
@@ -36,6 +37,13 @@ export interface EnergySettingsGasDialogParams {
   metadata?: StatisticsMetaData;
   gas_sources: GasSourceTypeEnergyPreference[];
   saveCallback: (source: GasSourceTypeEnergyPreference) => Promise<void>;
+}
+
+export interface EnergySettingsHeatingDialogParams {
+  source?: HeatingSourceTypeEnergyPreference;
+  metadata?: StatisticsMetaData;
+  heating_sources: HeatingSourceTypeEnergyPreference[];
+  saveCallback: (source: HeatingSourceTypeEnergyPreference) => Promise<void>;
 }
 
 export interface EnergySettingsWaterDialogParams {
@@ -99,6 +107,17 @@ export const showEnergySettingsGasDialog = (
   fireEvent(element, "show-dialog", {
     dialogTag: "dialog-energy-gas-settings",
     dialogImport: () => import("./dialog-energy-gas-settings"),
+    dialogParams: dialogParams,
+  });
+};
+
+export const showEnergySettingsHeatingDialog = (
+  element: HTMLElement,
+  dialogParams: EnergySettingsHeatingDialogParams
+): void => {
+  fireEvent(element, "show-dialog", {
+    dialogTag: "dialog-energy-heating-settings",
+    dialogImport: () => import("./dialog-energy-heating-settings"),
     dialogParams: dialogParams,
   });
 };

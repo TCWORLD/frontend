@@ -149,6 +149,7 @@ class PanelEnergy extends LitElement {
       electricity: "electricity",
       gas: "gas",
       water: "water",
+      heating: "heating",
       now: "electricity",
     };
     const tab = tabMap[viewPath] || "electricity";

@@ -44,6 +44,14 @@ const GAS_VIEW = {
   },
 } as LovelaceViewConfig;
 
+const HEATING_VIEW = {
+  path: "heating",
+  strategy: {
+    type: "heating",
+    collection_key: DEFAULT_ENERGY_COLLECTION_KEY,
+  },
+} as LovelaceViewConfig;
+
 const POWER_VIEW = {
   path: "now",
   strategy: {
@@ -112,6 +120,10 @@ export class EnergyDashboardStrategy extends ReactiveElement {
 
     const hasGas = prefs.energy_sources.some((source) => source.type === "gas");
 
+    const hasHeating = prefs.energy_sources.some(
+      (source) => source.type === "heating"
+    );
+
     const hasDeviceConsumption = prefs.device_consumption.length > 0;
 
     const views: LovelaceViewConfig[] = [];
@@ -124,12 +136,15 @@ export class EnergyDashboardStrategy extends ReactiveElement {
     if (hasWater) {
       views.push(WATER_VIEW);
     }
+    if (hasHeating) {
+      views.push(HEATING_VIEW);
+    }
     if (hasPower) {
       views.push(POWER_VIEW);
     }
     if (
       hasPowerSource ||
-      [hasEnergy, hasGas, hasWater].filter(Boolean).length > 1
+      [hasEnergy, hasGas, hasWater, hasHeating].filter(Boolean).length > 1
     ) {
       views.unshift(OVERVIEW_VIEW);
     }

@@ -12,11 +12,22 @@ import "../../config/energy/components/ha-energy-battery-settings";
 import "../../config/energy/components/ha-energy-device-settings";
 import "../../config/energy/components/ha-energy-gas-settings";
 import "../../config/energy/components/ha-energy-grid-settings";
+import "../../config/energy/components/ha-energy-heating-settings";
 import "../../config/energy/components/ha-energy-solar-settings";
 import "../../config/energy/components/ha-energy-water-settings";
 import "../../../components/ha-button";
 import type { Lovelace, LovelaceCard } from "../../lovelace/types";
 
+enum EnergyWizardSteps {
+  GRID = 0,
+  SOLAR,
+  BATTERY,
+  GAS,
+  HEATING,
+  WATER,
+  DEVICE,
+  STEP_COUNT,
+}
 @customElement("energy-setup-wizard-card")
 export class EnergySetupWizard extends LitElement implements LovelaceCard {
   @property({ attribute: false }) public hass!: HomeAssistant;
@@ -49,56 +60,76 @@ export class EnergySetupWizard extends LitElement implements LovelaceCard {
   }
 
   protected render(): TemplateResult {
+    let stepFlow: TemplateResult;
+    switch (this._step) {
+      case EnergyWizardSteps.GRID:
+        stepFlow = html`<ha-energy-grid-settings
+          .hass=${this.hass}
+          .preferences=${this._preferences}
+          @value-changed=${this._prefsChanged}
+        ></ha-energy-grid-settings>`;
+        break;
+      case EnergyWizardSteps.SOLAR:
+        stepFlow = html`<ha-energy-solar-settings
+          .hass=${this.hass}
+          .preferences=${this._preferences}
+          .info=${this._info}
+          @value-changed=${this._prefsChanged}
+        ></ha-energy-solar-settings>`;
+        break;
+      case EnergyWizardSteps.BATTERY:
+        stepFlow = html`<ha-energy-battery-settings
+          .hass=${this.hass}
+          .preferences=${this._preferences}
+          @value-changed=${this._prefsChanged}
+        ></ha-energy-battery-settings>`;
+        break;
+      case EnergyWizardSteps.GAS:
+        stepFlow = html`<ha-energy-gas-settings
+          .hass=${this.hass}
+          .preferences=${this._preferences}
+          @value-changed=${this._prefsChanged}
+        ></ha-energy-gas-settings>`;
+        break;
+      case EnergyWizardSteps.HEATING:
+        stepFlow = html`<ha-energy-heating-settings
+          .hass=${this.hass}
+          .preferences=${this._preferences}
+          @value-changed=${this._prefsChanged}
+        ></ha-energy-heating-settings>`;
+        break;
+      case EnergyWizardSteps.WATER:
+        stepFlow = html`<ha-energy-water-settings
+          .hass=${this.hass}
+          .preferences=${this._preferences}
+          @value-changed=${this._prefsChanged}
+        ></ha-energy-water-settings>`;
+        break;
+      case EnergyWizardSteps.DEVICE:
+      default:
+        stepFlow = html`<ha-energy-device-settings
+          .hass=${this.hass}
+          .preferences=${this._preferences}
+          @value-changed=${this._prefsChanged}
+        ></ha-energy-device-settings>`;
+        break;
+    }
+
     return html`
       <p>
         ${this.hass.localize("ui.panel.energy.setup.step", {
           step: this._step + 1,
-          steps: 6,
+          steps: EnergyWizardSteps.STEP_COUNT,
         })}
       </p>
-      ${this._step === 0
-        ? html`<ha-energy-grid-settings
-            .hass=${this.hass}
-            .preferences=${this._preferences}
-            @value-changed=${this._prefsChanged}
-          ></ha-energy-grid-settings>`
-        : this._step === 1
-          ? html`<ha-energy-solar-settings
-              .hass=${this.hass}
-              .preferences=${this._preferences}
-              .info=${this._info}
-              @value-changed=${this._prefsChanged}
-            ></ha-energy-solar-settings>`
-          : this._step === 2
-            ? html`<ha-energy-battery-settings
-                .hass=${this.hass}
-                .preferences=${this._preferences}
-                @value-changed=${this._prefsChanged}
-              ></ha-energy-battery-settings>`
-            : this._step === 3
-              ? html`<ha-energy-gas-settings
-                  .hass=${this.hass}
-                  .preferences=${this._preferences}
-                  @value-changed=${this._prefsChanged}
-                ></ha-energy-gas-settings>`
-              : this._step === 4
-                ? html`<ha-energy-water-settings
-                    .hass=${this.hass}
-                    .preferences=${this._preferences}
-                    @value-changed=${this._prefsChanged}
-                  ></ha-energy-water-settings>`
-                : html`<ha-energy-device-settings
-                    .hass=${this.hass}
-                    .preferences=${this._preferences}
-                    @value-changed=${this._prefsChanged}
-                  ></ha-energy-device-settings>`}
+      ${stepFlow}
       <div class="buttons">
         ${this._step > 0
           ? html`<ha-button appearance="plain" @click=${this._back}
               >${this.hass.localize("ui.panel.energy.setup.back")}</ha-button
             >`
           : html`<div></div>`}
-        ${this._step < 4
+        ${this._step < EnergyWizardSteps.STEP_COUNT - 1
           ? html`<ha-button @click=${this._next}
               >${this.hass.localize("ui.panel.energy.setup.next")}</ha-button
             >`
@@ -125,7 +156,7 @@ export class EnergySetupWizard extends LitElement implements LovelaceCard {
   }
 
   private _next() {
-    if (this._step === 5) {
+    if (this._step === EnergyWizardSteps.STEP_COUNT - 1) {
       return;
     }
     this._step++;
